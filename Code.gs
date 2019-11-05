@@ -5,7 +5,7 @@
 function sortBySelectedCol() {
   var sheet = SpreadsheetApp.getActiveSheet();
   var cell = sheet.getCurrentCell(); //get the active cell (i.e. the category to sort by)
-  var cellRange = sheet.getRange("O1:Z1"); //get the range of category cells
+  var cellRange = sheet.getRange("O1:AA1"); //get the range of category cells
   
   //ensure the selected cell is in the first row (the row which contains categories)
   if (cell.getRow() == 1) {
@@ -16,7 +16,7 @@ function sortBySelectedCol() {
     if (col >= rangeCol1 && col <= rangeCol2) {
 	  //get the range of the leaderboard
       var lastRow = sheet.getLastRow();
-      var leaderboardRange = sheet.getRange("O2:Z" + lastRow);
+      var leaderboardRange = sheet.getRange("O2:AA" + lastRow);
 	  
 	  //sort the leaderboard by the selected category in descending order (highest to lowest)
       leaderboardRange.sort({column:col, ascending:false});
@@ -43,32 +43,32 @@ function getStats() {
   
   //clear the leaderboard
   var lastRow = sheet.getLastRow(); //get the last row of the sheet, so we can get our range
-  var leaderboardRange = sheet.getRange("O1:Z" + lastRow); //get the range of the leaderboard (default placement is cols O to Z)
+  var leaderboardRange = sheet.getRange("O1:AA" + lastRow); //get the range of the leaderboard (default placement is cols O to AA)
   leaderboardRange.clear(); //clear the leaderboard range to populate fresh
   
   //begin creating our new leaderboard
-  var row = sheet.getRange("O1:Z1"); //the category row
+  var row = sheet.getRange("O1:AA1"); //the category row
   row.setFontWeight("bold");
   row.setBackgroundRGB(200, 200, 200);
   //set the values in the category row using this array of values
-  row.setValues([['Name ', 'Rating ', 'Kills ', 'Assists ', 'Deaths ', 'ADR ', 'Headshot % ', 'Clutch Kills ', 'Bombs Planted ', 'Bombs Defused ', 'Flash Assists ', 'Enemy Flash Duration ']])
+  row.setValues([['Name ', 'Games Played ', 'Rating ', 'Kills ', 'Assists ', 'Deaths ', 'ADR ', 'Headshot % ', 'Clutch Kills ', 'Bombs Planted ', 'Bombs Defused ', 'Flash Assists ', 'Enemy Flash Duration ']])
   
   //for each value in our array of stats, populate another row of data
   for (var i = 0; i < stats.length; i++) {
-    row = sheet.getRange("O" + (i+2) + ":Z" + (i+2)); //get the corresponding row range to populate
+    row = sheet.getRange("O" + (i+2) + ":AA" + (i+2)); //get the corresponding row range to populate
     row.setBackgroundRGB(235, 235, 235);
 	//set the values of the row in order as above, using data from the stats array
-    row.setValues([[stats[i].name, stats[i].rating, stats[i].kills, stats[i].assists, stats[i].deaths, stats[i].adr, stats[i].hsp, stats[i].ck, stats[i].bp, stats[i].bd, stats[i].fa, stats[i].fed]])
+    row.setValues([[stats[i].name, stats[i].gp, stats[i].rating, stats[i].kills, stats[i].assists, stats[i].deaths, stats[i].adr, stats[i].hsp, stats[i].ck, stats[i].bp, stats[i].bd, stats[i].fa, stats[i].fed]])
   }
   
-  sheet.autoResizeColumns(1, sheet.getLastColumn()); //resize all columns to ensure readability
+  sheet.autoResiAAeColumns(1, sheet.getLastColumn()); //resiAAe all columns to ensure readability
   
   //get the range of our new leaderboard
   lastRow = sheet.getLastRow();
-  leaderboardRange = sheet.getRange("O2:Z" + lastRow);
+  leaderboardRange = sheet.getRange("O2:AA" + lastRow);
   
   //sort the leaderboard by best to worst Rating
-  var colToSortBy = sheet.getRange("A1:P1").getLastColumn(); //the P column is Rating by default
+  var colToSortBy = sheet.getRange("A1:Q1").getLastColumn(); //the P column is Rating by default
   leaderboardRange.sort({column:colToSortBy, ascending:false}); //sort the leaderboard
 }
 
@@ -118,6 +118,7 @@ function buildStatsObjectForRow(r) {
   for (var i = 0; i < categories.length; i++) {
     obj[categories[i]] = values[i]; //create a key from the category, and assign its value based on the corresponding index in values
   }
+  obj.gp = 1; //new stats object, so initialize games played to 1
   
   return obj; //return our stats object
 }
@@ -171,6 +172,7 @@ function mergePlayerStats(ops, nps) {
   obj.bp = Number(ops.bp) + Number(nps.bp); //add bomb plants together
   obj.bd = Number(ops.bd) + Number(nps.bd); //add bomb defuses together
   obj.fed = (Number(ops.fed) + Number(nps.fed)).toFixed(2); //add flash enemy duration together, round to w decimal places
+  obj.gp = ops.gp + 1; //add one to games played
   return obj; //return our merged stats
 }
 
