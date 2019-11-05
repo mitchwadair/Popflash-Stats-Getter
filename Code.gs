@@ -54,12 +54,12 @@ function getStats() {
   row.setValues([['Name ', 'Games Played ', 'Rating ', 'Kills ', 'Assists ', 'Deaths ', 'ADR ', 'Headshot % ', 'Clutch Kills ', 'Bombs Planted ', 'Bombs Defused ', 'Flash Assists ', 'Enemy Flash Duration ']])
   
   //for each value in our array of stats, populate another row of data
-  for (var i = 0; i < stats.length; i++) {
+  stats.forEach(function(stat, i) {
     row = sheet.getRange("O" + (i+2) + ":AA" + (i+2)); //get the corresponding row range to populate
     row.setBackgroundRGB(235, 235, 235);
 	//set the values of the row in order as above, using data from the stats array
-    row.setValues([[stats[i].name, stats[i].gp, stats[i].rating, stats[i].kills, stats[i].assists, stats[i].deaths, stats[i].adr, stats[i].hsp, stats[i].ck, stats[i].bp, stats[i].bd, stats[i].fa, stats[i].fed]])
-  }
+    row.setValues([[stat.name, stat.gp, stat.rating, stat.kills, stat.assists, stat.deaths, stat.adr, stat.hsp, stat.ck, stat.bp, stat.bd, stat.fa, stat.fed]])
+  });
   
   sheet.autoResizeColumns(1, sheet.getLastColumn()); //resize all columns to ensure readability
   
