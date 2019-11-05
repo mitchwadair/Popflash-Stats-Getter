@@ -34,7 +34,7 @@ function getStats() {
   var dataLength = data.filter(String).length; //get the number of links in the column
   var links = sheet.getRange("M2:M" + (dataLength+1)).getValues(); //get an array of links
   
-  var stats = []; //declare an empty array to store our stats
+  var stats = [];
   //for every link, get the stats for the match, and merge them with existing stats
   links.forEach(function(row) {
     var newStats = getStatsForMatch(row[0]); //get the stats
@@ -68,8 +68,8 @@ function getStats() {
   leaderboardRange = sheet.getRange("O2:AA" + lastRow);
   
   //sort the leaderboard by best to worst Rating
-  var colToSortBy = sheet.getRange("A1:Q1").getLastColumn(); //the P column is Rating by default
-  leaderboardRange.sort({column:colToSortBy, ascending:false}); //sort the leaderboard
+  var colToSortBy = sheet.getRange("A1:Q1").getLastColumn();
+  leaderboardRange.sort({column:colToSortBy, ascending:false});
 }
 
 //get stats for entire match page given a url
@@ -81,23 +81,23 @@ function getStatsForMatch(url) {
   var html = parsedContent.getRootElement(); //get the root element of the parsed content
   var scoreboards = getElementsByTag(getElementsByClassName(html, 'scoreboards')[0], 'table'); //get the scoreboards
   
-  var stats = []; //declare our empty array of stats
+  var stats = [];
   //for each scoreboard, get the data and add it to our stats array
   scoreboards.forEach(function(board) {
     var rows = getElementsByTag(board, 'tr').slice(1); //get the rows of data, remove first row as it is not useful
     rows.forEach(function(row) {
-      var statsObject = buildStatsObjectForRow(row); //build our stats object from the row data
-      stats.push(statsObject); //add the object to our array
+      var statsObject = buildStatsObjectForRow(row);
+      stats.push(statsObject);
     });
   });
-  return stats; //return our array of stats
+  return stats;
 }
 
 //create a JSON object with stats for a specific row of data
 function buildStatsObjectForRow(r) {
   var data = getElementsByTag(r, 'td'); //get the cells of data from the row passed into the function
   var categories = ['name', 'id', 'kills', 'assists', 'deaths', 'fa', 'adr', 'rating', 'hsp', 'ck', 'bp', 'bd', 'fed']; //an array of categories to map to
-  var values = []; //declare our empty array of values
+  var values = [];
   //for each data entry, add it to our array of values
   data.forEach(function(entry, i) {
     //if this is the first run through our loop, our data case is slightly different
@@ -105,19 +105,19 @@ function buildStatsObjectForRow(r) {
       values.push(entry.getAttribute('title').getValue()) //get the player's name from the title attribute of the cell
       values.push(getElementsByTag(entry, 'a')[0].getAttribute('href').getValue()); //get the popflash user id from the cell, this is stored in an "<a>" tag to link to a profile
     } else {
-      values.push(entry.getValue()); //add the data entry to the array of values
+      values.push(entry.getValue());
     }
   });
   
   //build our object
-  var obj = {}; //declare our empty object
+  var obj = {};
   //for every category, add a new key to the object with its corresponding value
   categories.forEach(function(category, i) {
-    obj[category] = values[i]; //create a key from the category, and assign its value based on the corresponding index in values
+    obj[category] = values[i];
   });
   obj.gp = 1; //new stats object, so initialize games played to 1
   
-  return obj; //return our stats object
+  return obj;
 }
 
 /*
@@ -130,27 +130,27 @@ function matchIds(player) {
 
 //merge two arrays of stats objects
 function mergeStats(oldStats, newStats) {
-  var mergedStats = []; //declare an empty array to add merged stats to
+  var mergedStats = [];
   //if there there are stats to merge, do it.  Otherwise we just add the new stats to our stats array
   if (oldStats.length > 0) {
     mergedStats = oldStats; //begin mergedStats as the old array of stats
 	//while we still have entries in our new stats, compare and merge
     while (newStats.length > 0) {
-      var compare = newStats.pop(); //get a stats object to compare
-      var match = mergedStats.filter(matchIds, compare); //find a matching player in mergedStats
+      var compare = newStats.pop();
+      var match = mergedStats.filter(matchIds, compare);
 	  //if we have a match, merge and replace.  If not, add to the array
       if (match.length > 0) {
-        var index = mergedStats.indexOf(match[0]); //get the index of the matching stats object
-        mergedStats[index] = mergePlayerStats(mergedStats[index], compare); //replace the object with the merged stats
+        var index = mergedStats.indexOf(match[0]);
+        mergedStats[index] = mergePlayerStats(mergedStats[index], compare);
       } else {
-        mergedStats.push(compare); //push the unmatched stats object to the merged array
+        mergedStats.push(compare);
       }
     }
   } else {
     mergedStats = newStats; //first run through, set merged to the new stats
   }
   
-  return mergedStats; //return our merged stats array
+  return mergedStats;
 }
 
 //take an object and merge the stats, adding and averaging where needed
