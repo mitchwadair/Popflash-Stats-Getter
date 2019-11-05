@@ -83,15 +83,13 @@ function getStatsForMatch(url) {
   
   var stats = []; //declare our empty array of stats
   //for each scoreboard, get the data and add it to our stats array
-  for (var i = 0; i < scoreboards.length; i++) {
-    var rows = getElementsByTag(scoreboards[i], 'tr'); //get the rows of data
-	//for each row of data, create a new stats object and add it to our stats array
-    for (var r = 1; r < rows.length; r++) {
-      var row = rows[r];
+  scoreboards.forEach(function(board) {
+    var rows = getElementsByTag(board, 'tr').slice(1); //get the rows of data, remove first row as it is not useful
+    rows.forEach(function(row) {
       var statsObject = buildStatsObjectForRow(row); //build our stats object from the row data
       stats.push(statsObject); //add the object to our array
-    }
-  }
+    });
+  });
   return stats; //return our array of stats
 }
 
