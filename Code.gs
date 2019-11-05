@@ -135,29 +135,21 @@ function mergeStats(oldStats, newStats) {
   var mergedStats = []; //declare an empty array to add merged stats to
   //if there there are stats to merge, do it.  Otherwise we just add the new stats to our stats array
   if (oldStats.length > 0) {
-	//for every entry in the old stats, check for a match and merge if found
-	//if no match is found, add it to the merged stats array
-    for (var i = 0; i < oldStats.length; i++) {
-      var match = newStats.filter(matchIds, oldStats[i]); //finds all matches for the given player, should return an array of length 1 if match found
-	  //if match.length is equal to zero, no match was found
-      if (match.length == 0) {
-        mergedStats.push(oldStats[i]); //no match found, so push the entry to our merges stats array
+    mergedStats = oldStats; //begin mergedStats as the old array of stats
+	//while we still have entries in our new stats, compare and merge
+    while (newStats.length > 0) {
+      var compare = newStats.pop(); //get a stats object to compare
+      var match = mergedStats.filter(matchIds, compare); //find a matching player in mergedStats
+	  //if we have a match, merge and replace.  If not, add to the array
+      if (match.length > 0) {
+        var index = mergedStats.indexOf(match[0]); //get the index of the matching stats object
+        mergedStats[index] = mergePlayerStats(mergedStats[index], compare); //replace the object with the merged stats
       } else {
-        mergedStats.push(mergePlayerStats(oldStats[i], match[0])); //a match was found, so merge the two sets of data
-      }
-    }
-	
-	//for each player in the new stats array, add any unmatched players to our merged stats
-	//we dont do any merging here because that was done in the previous loop
-    for (var i = 0; i < newStats.length; i++) {
-      var match = oldStats.filter(matchIds, newStats[i]); //find any matches
-	  //if match.length is equal to zero, we have no matches
-      if (match.length == 0) {
-        mergedStats.push(newStats[i]); //if there is no match, add the player stats to the merged stats array
+        mergedStats.push(compare); //push the unmatched stats object to the merged array
       }
     }
   } else {
-    mergedStats = newStats; //if there are no old stats, set the merged stats to the new stats array
+    mergedStats = newStats; //first run through, set merged to the new stats
   }
   
   return mergedStats; //return our merged stats array
