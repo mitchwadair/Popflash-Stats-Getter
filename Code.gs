@@ -112,9 +112,9 @@ function buildStatsObjectForRow(r) {
   //build our object
   var obj = {}; //declare our empty object
   //for every category, add a new key to the object with its corresponding value
-  for (var i = 0; i < categories.length; i++) {
-    obj[categories[i]] = values[i]; //create a key from the category, and assign its value based on the corresponding index in values
-  }
+  categories.forEach(function(category, i) {
+    obj[category] = values[i]; //create a key from the category, and assign its value based on the corresponding index in values
+  });
   obj.gp = 1; //new stats object, so initialize games played to 1
   
   return obj; //return our stats object
