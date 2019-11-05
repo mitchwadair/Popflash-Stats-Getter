@@ -13,7 +13,7 @@ function sortBySelectedCol() {
     var rangeCol2 = cellRange.getLastColumn(); //get the last column of the category range
     var col = cell.getColumn(); //get the column of the current selected cell
 	//ensure the selected cell is within the category range
-    if (col > rangeCol1 && col < rangeCol2) {
+    if (col >= rangeCol1 && col <= rangeCol2) {
 	  //get the range of the leaderboard
       var lastRow = sheet.getLastRow();
       var leaderboardRange = sheet.getRange("O2:Z" + lastRow);
