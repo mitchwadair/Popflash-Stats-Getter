@@ -99,16 +99,15 @@ function buildStatsObjectForRow(r) {
   var categories = ['name', 'id', 'kills', 'assists', 'deaths', 'fa', 'adr', 'rating', 'hsp', 'ck', 'bp', 'bd', 'fed']; //an array of categories to map to
   var values = []; //declare our empty array of values
   //for each data entry, add it to our array of values
-  for (var i = 0; i < data.length; i++) {
-    var entry = data[i]; //get our data entry
-	//if this is the first run through our loop, our data case if slightly different
+  data.forEach(function(entry, i) {
+    //if this is the first run through our loop, our data case is slightly different
     if (i == 0) {
       values.push(entry.getAttribute('title').getValue()) //get the player's name from the title attribute of the cell
       values.push(getElementsByTag(entry, 'a')[0].getAttribute('href').getValue()); //get the popflash user id from the cell, this is stored in an "<a>" tag to link to a profile
     } else {
       values.push(entry.getValue()); //add the data entry to the array of values
     }
-  }
+  });
   
   //build our object
   var obj = {}; //declare our empty object
