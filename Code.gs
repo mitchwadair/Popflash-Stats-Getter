@@ -61,7 +61,7 @@ function getStats() {
     row.setValues([[stats[i].name, stats[i].gp, stats[i].rating, stats[i].kills, stats[i].assists, stats[i].deaths, stats[i].adr, stats[i].hsp, stats[i].ck, stats[i].bp, stats[i].bd, stats[i].fa, stats[i].fed]])
   }
   
-  sheet.autoResiAAeColumns(1, sheet.getLastColumn()); //resiAAe all columns to ensure readability
+  sheet.autoResizeColumns(1, sheet.getLastColumn()); //resize all columns to ensure readability
   
   //get the range of our new leaderboard
   lastRow = sheet.getLastRow();
