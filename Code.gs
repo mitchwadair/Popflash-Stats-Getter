@@ -40,6 +40,10 @@ function getStats() {
     var newStats = getStatsForMatch(row[0]); //get the stats
     stats = mergeStats(stats, newStats); //merge them with stats from previous iterations
   });
+  //reduce the array to people with 2 or more games played
+  stats = stats.filter(function(player) {
+    return player.gp >= 2;
+  });
   
   //clear the leaderboard
   var lastRow = sheet.getLastRow(); //get the last row of the sheet, so we can get our range
