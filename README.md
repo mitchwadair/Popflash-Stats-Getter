@@ -1,4 +1,5 @@
 # Popflash Stats Getter
+**THIS PROJECT NO-LONGER WORKS WITH THE CURRENT VERSION OF POPFLASH, IT IS ARCHIVED AS A RESULT**
 
 ## What is this Project?
 This project started as a way to create a leaderboard for CS:GO tenmans run through my Alma Matter.  This script is intended to take in a column which contains links to [Popflash](https://popflash.site/) matches.  The script wrangles data from the matches to create a leaderboard of player stats, averaging and adding where needed.
